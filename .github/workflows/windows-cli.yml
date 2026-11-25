@@ -71,5 +71,7 @@ jobs:
       - name: No Mac build errors from files the port shares or touches
         run: |
           grep -E ': error: ' xcodebuild.log | sort -u || true
-          ! grep -E '/Editroom/(Model/[^:]+|Magic/MagicHistory|Engine/Transcripts)\.swift:[0-9]+:[0-9]+: error: ' xcodebuild.log
           echo "Full Mac app build: ${{ steps.app.outcome }}"
+          if grep -E '/Editroom/(Model/[^:]+|Magic/MagicHistory|Engine/Transcripts)\.swift:[0-9]+:[0-9]+: error: ' xcodebuild.log; then
+            exit 1
+          fi
