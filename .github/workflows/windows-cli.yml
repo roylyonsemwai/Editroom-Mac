@@ -53,5 +53,10 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
-      - run: xcodebuild -version
+      # The app uses macOS 27 SDK APIs (FoundationModels image attachments), so build with the newest Xcode installed.
+      - name: Select newest Xcode
+        run: |
+          ls -d /Applications/Xcode*.app
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)"
+          xcodebuild -version
       - run: xcodebuild -project Editroom.xcodeproj -scheme Editroom -configuration Debug -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build

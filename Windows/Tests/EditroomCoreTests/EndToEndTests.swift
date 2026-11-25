@@ -38,8 +38,8 @@ final class EndToEndTests: XCTestCase {
 
     func meanVolume(_ file: URL, from t: Double, length: Double) throws -> Double {
         let r = try Tools.run(ffmpeg, ["-hide_banner", "-ss", String(t), "-t", String(length), "-i", Tools.nativePath(file), "-af", "volumedetect", "-vn", "-f", "null", "-"])
-        let line = r.stderr.split(separator: "\n").first { $0.contains("mean_volume:") } ?? ""
-        return Double(line.split(separator: ":").last?.replacingOccurrences(of: "dB", with: "").trimmingCharacters(in: .whitespaces) ?? "") ?? -999
+        let line = r.stderr.components(separatedBy: .newlines).first { $0.contains("mean_volume:") } ?? ""
+        return Double(line.split(separator: ":").last?.replacingOccurrences(of: "dB", with: "").trimmingCharacters(in: .whitespacesAndNewlines) ?? "") ?? -999
     }
 
     func testCutAndExport() throws {

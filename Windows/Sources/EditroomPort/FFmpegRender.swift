@@ -178,7 +178,7 @@ struct FFmpegRender {
     /// `-/filter_complex <file>` on FFmpeg 7.1+, `-filter_complex_script <file>` before (removed later).
     static func scriptFlag(ffmpeg: URL) -> String {
         guard let r = try? Tools.run(ffmpeg, ["-hide_banner", "-version"]) else { return "-/filter_complex" }
-        let first = String(decoding: r.stdout, as: UTF8.self).split(separator: "\n").first ?? ""
+        let first = String(decoding: r.stdout, as: UTF8.self).components(separatedBy: .newlines).first ?? ""
         guard let word = first.split(separator: " ").dropFirst(2).first else { return "-/filter_complex" }
         let parts = word.split(whereSeparator: { !$0.isNumber }).prefix(2).compactMap { Int($0) }
         guard parts.count == 2, word.first?.isNumber == true, parts[0] < 1000 else { return "-/filter_complex" }
@@ -199,7 +199,7 @@ struct FFmpegRender {
         defer { if let script { try? FileManager.default.removeItem(at: script) } }
         let r = try Tools.run(ffmpeg, args)
         guard r.status == 0 else {
-            let tail = r.stderr.split(separator: "\n").suffix(15).joined(separator: "\n")
+            let tail = r.stderr.components(separatedBy: .newlines).filter { !$0.isEmpty }.suffix(15).joined(separator: "\n")
             throw Tools.Failure(description: "ffmpeg failed (exit \(r.status)):\n\(tail)")
         }
     }
