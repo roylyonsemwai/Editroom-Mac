@@ -23,7 +23,12 @@ enum RoomFile {
     static func save(_ project: Project, to url: URL) throws {
         var saved = project
         saved.sanitize()
+        // Files not found here keep the link they came with, so copying the footage over later still finds it.
+        let kept = Dictionary(uniqueKeysWithValues: saved.assets.compactMap { a in
+            FileManager.default.fileExists(atPath: a.path) ? nil : a.relativePath.map { (a.id, $0) }
+        })
         saved.stampRelativePaths(projectDir: url.deletingLastPathComponent())
+        for i in saved.assets.indices { if let rel = kept[saved.assets[i].id] { saved.assets[i].relativePath = rel } }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(Document(project: saved)).write(to: url, options: .atomic)

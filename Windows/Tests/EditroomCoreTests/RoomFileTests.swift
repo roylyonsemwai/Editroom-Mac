@@ -56,4 +56,17 @@ final class RoomFileTests: XCTestCase {
         XCTAssertNil(loaded.assets[0].playablePath)
         XCTAssertEqual(RoomFile.missingMedia(loaded).count, 0)
     }
+
+    func testEditingBeforeTheFootageArrivesKeepsItsLinks() throws {
+        let dir = try tempDir()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let room = dir.appendingPathComponent("trip.room")
+        try FileManager.default.copyItem(at: fixtures.appendingPathComponent("mac-trip.room"), to: room)
+        try EditroomCLI.execute(["close-gaps", room.path], print: { _ in })
+
+        let footage = dir.appendingPathComponent("footage", isDirectory: true)
+        try FileManager.default.createDirectory(at: footage, withIntermediateDirectories: true)
+        for name in ["red.mp4", "blue clip.mp4"] { try Data().write(to: footage.appendingPathComponent(name)) }
+        XCTAssertEqual(RoomFile.missingMedia(try RoomFile.load(room)).map(\.name), [])
+    }
 }
