@@ -119,7 +119,10 @@ public enum EditroomCLI {
             if let n = try args.int("--clip") {
                 let ordered = orderedClips(project)
                 guard ordered.indices.contains(n - 1) else { throw Tools.Failure(description: "No clip \(n); see `info`") }
-                let ids = project.linked([ordered[n - 1].id])
+                guard !project.isLocked(ordered[n - 1].trackID) else { throw Tools.Failure(description: "Clip \(n) is on a locked track") }
+                let ids = project.linked([ordered[n - 1].id]).filter { id in
+                    project.clips.first { $0.id == id }.map { !project.isLocked($0.trackID) } ?? false
+                }
                 project.remove(ids: ids, ripple: true)
                 print("Removed clip \(n)\(ids.count > 1 ? " and its linked clip" : "")")
             } else {

@@ -51,4 +51,18 @@ final class TimelineEditTests: XCTestCase {
         XCTAssertEqual(try EditroomCLI.track(named: "a2", in: p), p.audioTracks[1].id)
         XCTAssertThrowsError(try EditroomCLI.track(named: "V9", in: p))
     }
+
+    func testRippleDeleteLeavesLockedTracksAlone() throws {
+        let dir = try tempDir()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let room = dir.appendingPathComponent("p.room").path
+        var p = try Assemble.project([asset("a.mp4", duration: 3), asset("b.mp4", duration: 2)])
+        p.audioTracks[0].locked = true
+        try RoomFile.save(p, to: URL(fileURLWithPath: room))
+        try EditroomCLI.execute(["ripple-delete", room, "--clip", "1"], print: { _ in })
+        let after = try RoomFile.load(URL(fileURLWithPath: room))
+        XCTAssertEqual(after.clips(on: after.videoTracks[0]).map(\.start), [0])
+        XCTAssertEqual(after.clips(on: after.audioTracks[0]).map(\.start), [0, 3])
+        XCTAssertThrowsError(try EditroomCLI.execute(["ripple-delete", room, "--clip", "2"], print: { _ in }))
+    }
 }
