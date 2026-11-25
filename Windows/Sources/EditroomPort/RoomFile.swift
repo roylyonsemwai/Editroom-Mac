@@ -16,15 +16,19 @@ enum RoomFile {
         return project
     }
 
-    static func save(_ project: Project, to url: URL) throws {
+    /// `source` is where the project was read from, so files not found here keep pointing at the same place
+    /// relative to it when saving somewhere else (and copying the footage over later still finds it).
+    static func save(_ project: Project, to url: URL, from source: URL? = nil) throws {
         var saved = project
         saved.sanitize()
-        // Files not found here keep the link they came with, so copying the footage over later still finds it.
-        let kept = Dictionary(uniqueKeysWithValues: saved.assets.compactMap { a in
-            FileManager.default.fileExists(atPath: a.path) ? nil : a.relativePath.map { (a.id, $0) }
-        })
-        saved.stampRelativePaths(projectDir: url.deletingLastPathComponent())
-        for i in saved.assets.indices { if let rel = kept[saved.assets[i].id] { saved.assets[i].relativePath = rel } }
+        let fromDir = (source ?? url).deletingLastPathComponent()
+        var stamped = saved
+        for i in stamped.assets.indices where !FileManager.default.fileExists(atPath: stamped.assets[i].path) {
+            guard let rel = stamped.assets[i].relativePath else { continue }
+            stamped.assets[i].path = fromDir.appendingPathComponent(rel).standardizedFileURL.path
+        }
+        stamped.stampRelativePaths(projectDir: url.deletingLastPathComponent())
+        for i in saved.assets.indices { saved.assets[i].relativePath = stamped.assets[i].relativePath }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(Document(project: saved)).write(to: url, options: .atomic)

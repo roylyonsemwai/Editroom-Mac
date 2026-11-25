@@ -82,7 +82,7 @@ public enum EditroomCLI {
         }
         func saveEdit(_ project: Project, from url: URL) throws {
             let out = args.options["-o"].map { URL(fileURLWithPath: $0) } ?? url
-            try RoomFile.save(project, to: out)
+            try RoomFile.save(project, to: out, from: url)
             print("Saved \(Tools.nativePath(out)) (\(Timecode.simple(project.duration)))")
         }
 
