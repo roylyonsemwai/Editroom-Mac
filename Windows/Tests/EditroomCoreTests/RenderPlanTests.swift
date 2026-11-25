@@ -70,4 +70,15 @@ final class RenderPlanTests: XCTestCase {
         XCTAssertEqual(still.kind, .image)
         XCTAssertFalse(still.hasAudio)
     }
+
+    func testGIFsAreLoopedAsAStream() throws {
+        let p = try Assemble.project([asset("still.png", kind: .image, duration: 0), asset("anim.gif", kind: .image, duration: 0)])
+        let args = try FFmpegRender(project: p, options: .init()).arguments(output: "out.mp4")
+        let inputs = args.indices.filter { args[$0] == "-i" }
+        let png = try XCTUnwrap(inputs.first { args[$0 + 1].hasSuffix("still.png") })
+        let gif = try XCTUnwrap(inputs.first { args[$0 + 1].hasSuffix("anim.gif") })
+        XCTAssertTrue(args[..<png].contains("-loop"))
+        XCTAssertFalse(args[png..<gif].contains("-loop"))
+        XCTAssertTrue(args[png..<gif].contains("-stream_loop"))
+    }
 }

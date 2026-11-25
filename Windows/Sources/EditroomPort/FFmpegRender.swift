@@ -74,8 +74,11 @@ struct FFmpegRender {
                     chain = "[\(k):v]setpts=(PTS-STARTPTS)/\(n(speed)),fps=\(n(fps)),\(fit(w, h))"
                 case .image:
                     guard let asset = project.asset(clip.assetID) else { continue }
-                    let k = addInput(["-loop", "1", "-framerate", n(fps), "-t", n(clip.duration), "-i", Tools.nativePath(asset.url)])
-                    chain = "[\(k):v]setpts=PTS-STARTPTS,\(fit(w, h))"
+                    // `-loop` belongs to the still-image reader; GIFs have their own demuxer, so they're looped as a stream.
+                    let gif = asset.url.pathExtension.lowercased() == "gif"
+                    let loop = gif ? ["-stream_loop", "-1"] : ["-loop", "1", "-framerate", n(fps)]
+                    let k = addInput(loop + ["-t", n(clip.duration), "-i", Tools.nativePath(asset.url)])
+                    chain = "[\(k):v]setpts=PTS-STARTPTS,\(gif ? "fps=\(n(fps))," : "")\(fit(w, h))"
                 case .solid:
                     let c = clip.color
                     let hex = [c.r, c.g, c.b].map { String(format: "%02X", Int(($0.clamped(to: 0...1) * 255).rounded())) }.joined()
