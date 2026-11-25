@@ -1,0 +1,77 @@
+name: Windows CLI
+
+on:
+  push:
+    branches: ["devin/**windows**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: compnerd/gha-setup-swift@57fe462cd3c7b05ae8fcff79b00719312e305257 # main, 2026-11-25
+        with:
+          branch: swift-6.1.2-release
+          tag: 6.1.2-RELEASE
+      - name: Install FFmpeg
+        run: choco install ffmpeg -y --no-progress
+      - name: Tool versions
+        run: |
+          swift --version
+          ffmpeg -hide_banner -version | Select-Object -First 1
+      - name: Build
+        run: swift build
+      - name: Test
+        env:
+          EDITROOM_REQUIRE_FFMPEG: "1"
+        run: swift test
+      - name: Smoke test (PowerShell, as in docs/WINDOWS.md)
+        run: .\Windows\scripts\smoke.ps1 -Work "$env:RUNNER_TEMP\editroom smoke"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-smoke-export
+          path: |
+            ${{ runner.temp }}/editroom smoke/trip.room
+            ${{ runner.temp }}/editroom smoke/trip export.mp4
+
+  linux:
+    runs-on: ubuntu-latest
+    container: swift:6.1-jammy
+    steps:
+      - uses: actions/checkout@v4
+      - run: apt-get update && apt-get install -y --no-install-recommends ffmpeg
+      - run: swift build
+      - run: swift test
+        env:
+          EDITROOM_REQUIRE_FFMPEG: "1"
+
+  macos-app:
+    # The Mac app must still build from the Xcode project after the shared-file changes. Main already needs the
+    # macOS 27 SDK (SceneTags.swift uses FoundationModels image attachments), which no hosted runner has yet, so
+    # until then this fails only on Xcode errors in files this port shares or touches.
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select newest Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
+      - name: SwiftPM core on macOS
+        run: swift build && swift test
+      - name: Build the Mac app
+        id: app
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          xcodebuild -project Editroom.xcodeproj -scheme Editroom -configuration Debug -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee xcodebuild.log
+      - name: No Mac build errors from files the port shares or touches
+        run: |
+          grep -E ': error: ' xcodebuild.log | sort -u || true
+          echo "Full Mac app build: ${{ steps.app.outcome }}"
+          if grep -E '/Editroom/(Model/[^:]+|Magic/MagicHistory|Engine/Transcripts)\.swift:[0-9]+:[0-9]+: error: ' xcodebuild.log; then
+            exit 1
+          fi
