@@ -50,6 +50,8 @@ final class TimelineEditTests: XCTestCase {
         XCTAssertEqual(try EditroomCLI.time("12.5", fps: 30), 12.5)
         XCTAssertEqual(try EditroomCLI.track(named: "a2", in: p), p.audioTracks[1].id)
         XCTAssertThrowsError(try EditroomCLI.track(named: "V9", in: p))
+        XCTAssertThrowsError(try EditroomCLI.Args(["split", "p.room", "--at", "1", "-O", "copy.room"]))
+        XCTAssertEqual(try EditroomCLI.Args(["split", "p.room", "--at", "-1.5"]).options["--at"], "-1.5")
     }
 
     func testRippleDeleteLeavesLockedTracksAlone() throws {

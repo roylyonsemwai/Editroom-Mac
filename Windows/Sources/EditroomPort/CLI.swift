@@ -31,11 +31,15 @@ public enum EditroomCLI {
 
         init(_ raw: [String]) throws {
             let valueless: Set<String> = ["--dry-run", "--help", "-h"]
+            let valued: Set<String> = ["-o", "--at", "--track", "--from", "--to", "--clip", "--width", "--height", "--fps",
+                                       "--encoder", "--ffmpeg", "--ffprobe"]
             var i = 0
             while i < raw.count {
                 let a = raw[i]
                 if a.hasPrefix("-") && a.count > 1 && Double(a) == nil {
-                    if valueless.contains(a) { flags.insert(a) } else {
+                    if valueless.contains(a) { flags.insert(a) } else if !valued.contains(a) {
+                        throw Tools.Failure(description: "Unknown option \(a)")
+                    } else {
                         guard i + 1 < raw.count else { throw Tools.Failure(description: "\(a) needs a value") }
                         options[a] = raw[i + 1]
                         i += 1
