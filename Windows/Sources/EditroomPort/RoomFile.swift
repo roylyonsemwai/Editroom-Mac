@@ -13,6 +13,10 @@ enum RoomFile {
         let doc = try JSONDecoder().decode(Document.self, from: Data(contentsOf: url))
         var project = doc.project
         project.resolveMovedMedia(projectDir: url.deletingLastPathComponent())
+        // playablePath is the Mac's AVFoundation conversion cache; when it didn't come along, ffmpeg reads the original.
+        for i in project.assets.indices where project.assets[i].playablePath.map({ !FileManager.default.fileExists(atPath: $0) }) ?? false {
+            project.assets[i].playablePath = nil
+        }
         return project
     }
 

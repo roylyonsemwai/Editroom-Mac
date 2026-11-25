@@ -41,4 +41,19 @@ final class RoomFileTests: XCTestCase {
         loaded.assets[0].relativePath = nil
         XCTAssertEqual(loaded, original)
     }
+
+    func testDropsAMacConversionCacheThatDidNotComeAlong() throws {
+        let dir = try tempDir()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let media = dir.appendingPathComponent("a.mp4")
+        try Data().write(to: media)
+        var p = try Assemble.project([asset("a.mp4", duration: 3)])
+        p.assets[0].path = media.path
+        p.assets[0].playablePath = "/Users/roy/Library/Caches/Editroom/a.mov"
+        let url = dir.appendingPathComponent("p.room")
+        try RoomFile.save(p, to: url)
+        let loaded = try RoomFile.load(url)
+        XCTAssertNil(loaded.assets[0].playablePath)
+        XCTAssertEqual(RoomFile.missingMedia(loaded).count, 0)
+    }
 }
