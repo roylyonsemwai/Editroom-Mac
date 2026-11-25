@@ -16,3 +16,7 @@ claude_desktop_config.json
 *.key
 secrets*
 dist/
+
+# SwiftPM (Windows/Linux CLI build)
+.build/
+.swiftpm/

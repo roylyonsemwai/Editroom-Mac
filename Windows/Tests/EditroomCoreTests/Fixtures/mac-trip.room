@@ -1,0 +1,285 @@
+{
+  "project" : {
+    "assets" : [
+      {
+        "duration" : 3,
+        "fps" : 30,
+        "hasAudio" : true,
+        "height" : 360,
+        "id" : "E04FEFEE-2BEC-46D0-9D0F-207176ADBE20",
+        "kind" : "video",
+        "name" : "red.mp4",
+        "path" : "\/Users\/roy\/Movies\/Trip\/footage\/red.mp4",
+        "relativePath" : "footage/red.mp4",
+        "width" : 640
+      },
+      {
+        "duration" : 2,
+        "fps" : 30,
+        "hasAudio" : true,
+        "height" : 360,
+        "id" : "E035A9FA-C5D2-40B7-9B12-2D6DFB9F9C04",
+        "kind" : "video",
+        "name" : "blue clip.mp4",
+        "path" : "\/Users\/roy\/Movies\/Trip\/footage\/blue clip.mp4",
+        "relativePath" : "footage/blue clip.mp4",
+        "width" : 640
+      }
+    ],
+    "audioTracks" : [
+      {
+        "duckDB" : -12,
+        "gainDB" : 0,
+        "hidden" : false,
+        "id" : "A25B4381-6A0D-4BF1-B184-C2D47FC0DC38",
+        "kind" : "audio",
+        "locked" : false,
+        "muted" : false,
+        "solo" : false
+      },
+      {
+        "duckDB" : -12,
+        "gainDB" : 0,
+        "hidden" : false,
+        "id" : "B6172A2F-858B-4A2D-BF01-D35D45D68509",
+        "kind" : "audio",
+        "locked" : false,
+        "muted" : false,
+        "solo" : false
+      }
+    ],
+    "clips" : [
+      {
+        "assetID" : "E04FEFEE-2BEC-46D0-9D0F-207176ADBE20",
+        "color" : {
+          "a" : 1,
+          "b" : 0.2,
+          "g" : 0.16,
+          "r" : 0.16
+        },
+        "duration" : 1,
+        "fadeIn" : 0,
+        "fadeOut" : 0,
+        "gainDB" : 0,
+        "id" : "0F999842-20FE-4E7E-8CCF-3CDFA221A5F1",
+        "kind" : "audio",
+        "linkID" : "309FA0EE-1276-46D9-912E-556AB11B8276",
+        "sourceStart" : 0,
+        "speed" : 1,
+        "start" : 0,
+        "text" : {
+          "bold" : true,
+          "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+          },
+          "fontName" : "",
+          "size" : 110,
+          "string" : "Text",
+          "x" : 0.5,
+          "y" : 0.5
+        },
+        "trackID" : "A25B4381-6A0D-4BF1-B184-C2D47FC0DC38"
+      },
+      {
+        "assetID" : "E04FEFEE-2BEC-46D0-9D0F-207176ADBE20",
+        "color" : {
+          "a" : 1,
+          "b" : 0.2,
+          "g" : 0.16,
+          "r" : 0.16
+        },
+        "duration" : 1,
+        "fadeIn" : 0,
+        "fadeOut" : 0,
+        "gainDB" : 0,
+        "id" : "1DF98730-128D-4EA0-A480-CDBD20860ECE",
+        "kind" : "video",
+        "linkID" : "309FA0EE-1276-46D9-912E-556AB11B8276",
+        "sourceStart" : 0,
+        "speed" : 1,
+        "start" : 0,
+        "text" : {
+          "bold" : true,
+          "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+          },
+          "fontName" : "",
+          "size" : 110,
+          "string" : "Text",
+          "x" : 0.5,
+          "y" : 0.5
+        },
+        "trackID" : "75C1B3B8-DC26-4B05-AECE-0E7D4B6B3155"
+      },
+      {
+        "assetID" : "E035A9FA-C5D2-40B7-9B12-2D6DFB9F9C04",
+        "color" : {
+          "a" : 1,
+          "b" : 0.2,
+          "g" : 0.16,
+          "r" : 0.16
+        },
+        "duration" : 2,
+        "fadeIn" : 0,
+        "fadeOut" : 0,
+        "gainDB" : 0,
+        "id" : "51FD7E0F-833C-434F-BDF9-9957139CF42B",
+        "kind" : "audio",
+        "linkID" : "7E61624C-D21C-4A5C-928B-7972BA304B1C",
+        "sourceStart" : 0,
+        "speed" : 1,
+        "start" : 2,
+        "text" : {
+          "bold" : true,
+          "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+          },
+          "fontName" : "",
+          "size" : 110,
+          "string" : "Text",
+          "x" : 0.5,
+          "y" : 0.5
+        },
+        "trackID" : "A25B4381-6A0D-4BF1-B184-C2D47FC0DC38"
+      },
+      {
+        "assetID" : "E035A9FA-C5D2-40B7-9B12-2D6DFB9F9C04",
+        "color" : {
+          "a" : 1,
+          "b" : 0.2,
+          "g" : 0.16,
+          "r" : 0.16
+        },
+        "duration" : 2,
+        "fadeIn" : 0,
+        "fadeOut" : 0,
+        "gainDB" : 0,
+        "id" : "E62C53D6-73E1-492E-97CD-AD74F52CFEAC",
+        "kind" : "video",
+        "linkID" : "7E61624C-D21C-4A5C-928B-7972BA304B1C",
+        "sourceStart" : 0,
+        "speed" : 1,
+        "start" : 2,
+        "text" : {
+          "bold" : true,
+          "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+          },
+          "fontName" : "",
+          "size" : 110,
+          "string" : "Text",
+          "x" : 0.5,
+          "y" : 0.5
+        },
+        "trackID" : "75C1B3B8-DC26-4B05-AECE-0E7D4B6B3155"
+      },
+      {
+        "assetID" : "E04FEFEE-2BEC-46D0-9D0F-207176ADBE20",
+        "color" : {
+          "a" : 1,
+          "b" : 0.2,
+          "g" : 0.16,
+          "r" : 0.16
+        },
+        "duration" : 1,
+        "fadeIn" : 0,
+        "fadeOut" : 0,
+        "gainDB" : 0,
+        "id" : "3397E37E-5C68-4429-99CD-C9938FEC5304",
+        "kind" : "video",
+        "linkID" : "F0667233-EB8E-45FE-976E-42262A1A046A",
+        "sourceStart" : 2,
+        "speed" : 1,
+        "start" : 1,
+        "text" : {
+          "bold" : true,
+          "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+          },
+          "fontName" : "",
+          "size" : 110,
+          "string" : "Text",
+          "x" : 0.5,
+          "y" : 0.5
+        },
+        "trackID" : "75C1B3B8-DC26-4B05-AECE-0E7D4B6B3155"
+      },
+      {
+        "assetID" : "E04FEFEE-2BEC-46D0-9D0F-207176ADBE20",
+        "color" : {
+          "a" : 1,
+          "b" : 0.2,
+          "g" : 0.16,
+          "r" : 0.16
+        },
+        "duration" : 1,
+        "fadeIn" : 0,
+        "fadeOut" : 0,
+        "gainDB" : 0,
+        "id" : "86A61577-446B-4119-BD0C-02DB740CD55E",
+        "kind" : "audio",
+        "linkID" : "F0667233-EB8E-45FE-976E-42262A1A046A",
+        "sourceStart" : 2,
+        "speed" : 1,
+        "start" : 1,
+        "text" : {
+          "bold" : true,
+          "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+          },
+          "fontName" : "",
+          "size" : 110,
+          "string" : "Text",
+          "x" : 0.5,
+          "y" : 0.5
+        },
+        "trackID" : "A25B4381-6A0D-4BF1-B184-C2D47FC0DC38"
+      }
+    ],
+    "fps" : 30,
+    "height" : 360,
+    "settingsLocked" : false,
+    "videoTracks" : [
+      {
+        "duckDB" : -12,
+        "gainDB" : 0,
+        "hidden" : false,
+        "id" : "75C1B3B8-DC26-4B05-AECE-0E7D4B6B3155",
+        "kind" : "video",
+        "locked" : false,
+        "muted" : false,
+        "solo" : false
+      },
+      {
+        "duckDB" : -12,
+        "gainDB" : 0,
+        "hidden" : false,
+        "id" : "37C0A350-DF85-49FB-B348-7C4F7FE40FDD",
+        "kind" : "video",
+        "locked" : false,
+        "muted" : false,
+        "solo" : false
+      }
+    ],
+    "width" : 640
+  },
+  "version" : 1
+}

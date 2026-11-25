@@ -13,6 +13,7 @@ enum MagicHistory {
 
     static let limit = 20
 
+#if !EDITROOM_CORE
     /// The list with a just-sent prompt at the top (moved there if it was sent before).
     static func adding(_ text: String, tab: MagicAgent.Tab, to list: [Entry]) -> [Entry]? {
         let t = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -21,4 +22,5 @@ enum MagicHistory {
         list.insert(Entry(text: t, tab: tab.rawValue, date: Date()), at: 0)
         return Array(list.prefix(limit))
     }
+#endif
 }
