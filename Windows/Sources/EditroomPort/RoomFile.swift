@@ -13,10 +13,6 @@ enum RoomFile {
         let doc = try JSONDecoder().decode(Document.self, from: Data(contentsOf: url))
         var project = doc.project
         project.resolveMovedMedia(projectDir: url.deletingLastPathComponent())
-        // playablePath is the Mac's AVFoundation conversion cache; when it didn't come along, ffmpeg reads the original.
-        for i in project.assets.indices where project.assets[i].playablePath.map({ !FileManager.default.fileExists(atPath: $0) }) ?? false {
-            project.assets[i].playablePath = nil
-        }
         return project
     }
 
@@ -37,6 +33,15 @@ enum RoomFile {
     /// Files the project uses that aren't on this computer.
     static func missingMedia(_ project: Project) -> [MediaAsset] {
         let used = Set(project.clips.compactMap(\.assetID))
-        return project.assets.filter { used.contains($0.id) && !FileManager.default.fileExists(atPath: Tools.nativePath($0.url)) }
+        return project.assets.filter { used.contains($0.id) && !FileManager.default.fileExists(atPath: Tools.nativePath($0.source)) }
+    }
+}
+
+extension MediaAsset {
+    /// The file ffmpeg reads: the Mac's conversion (`playablePath`) when it came along, else the original.
+    /// `playablePath` itself is left as saved so the Mac app can still convert again when it reopens the project.
+    var source: URL {
+        if let p = playablePath, FileManager.default.fileExists(atPath: p) { return URL(fileURLWithPath: p) }
+        return URL(fileURLWithPath: path)
     }
 }

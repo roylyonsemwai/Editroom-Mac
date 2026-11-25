@@ -69,15 +69,15 @@ struct FFmpegRender {
                 case .video where !clip.isReversed && !clip.isFreeze:
                     guard let asset = project.asset(clip.assetID), asset.kind == .video else { continue }
                     let length = max(clip.sourceLength, 1 / fps)
-                    let k = addInput(["-ss", n(clip.sourceStart), "-t", n(length), "-i", Tools.nativePath(asset.url)])
+                    let k = addInput(["-ss", n(clip.sourceStart), "-t", n(length), "-i", Tools.nativePath(asset.source)])
                     let speed = length / clip.duration
                     chain = "[\(k):v]setpts=(PTS-STARTPTS)/\(n(speed)),fps=\(n(fps)),\(fit(w, h))"
                 case .image:
                     guard let asset = project.asset(clip.assetID) else { continue }
                     // `-loop` belongs to the still-image reader; GIFs have their own demuxer, so they're looped as a stream.
-                    let gif = asset.url.pathExtension.lowercased() == "gif"
+                    let gif = asset.source.pathExtension.lowercased() == "gif"
                     let loop = gif ? ["-stream_loop", "-1"] : ["-loop", "1", "-framerate", n(fps)]
-                    let k = addInput(loop + ["-t", n(clip.duration), "-i", Tools.nativePath(asset.url)])
+                    let k = addInput(loop + ["-t", n(clip.duration), "-i", Tools.nativePath(asset.source)])
                     chain = "[\(k):v]setpts=PTS-STARTPTS,\(gif ? "fps=\(n(fps))," : "")\(fit(w, h))"
                 case .solid:
                     let c = clip.color
@@ -105,7 +105,7 @@ struct FFmpegRender {
             for clip in project.clips.filter({ $0.trackID == track.id && $0.kind == .audio }).sorted(by: { $0.start < $1.start }) {
                 guard let asset = project.asset(clip.assetID), asset.hasAudio else { continue }
                 let length = max(clip.sourceLength, 1 / fps)
-                let k = addInput(["-ss", n(clip.sourceStart), "-t", n(length), "-i", Tools.nativePath(asset.url)])
+                let k = addInput(["-ss", n(clip.sourceStart), "-t", n(length), "-i", Tools.nativePath(asset.source)])
                 var chain = "[\(k):a]asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo"
                 for t in Self.atempo(length / clip.duration) { chain += ",atempo=\(n(t))" }
                 chain += ",atrim=duration=\(n(clip.duration))"

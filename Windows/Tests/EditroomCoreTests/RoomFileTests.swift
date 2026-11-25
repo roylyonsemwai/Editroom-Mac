@@ -18,7 +18,7 @@ final class RoomFileTests: XCTestCase {
         XCTAssertEqual(p.width, 640)
         XCTAssertEqual(RoomFile.missingMedia(p).map(\.name), [])
         for a in p.assets {
-            XCTAssertTrue(FileManager.default.fileExists(atPath: Tools.nativePath(a.url)), a.path)
+            XCTAssertTrue(FileManager.default.fileExists(atPath: Tools.nativePath(a.source)), a.path)
         }
     }
 
@@ -42,7 +42,7 @@ final class RoomFileTests: XCTestCase {
         XCTAssertEqual(loaded, original)
     }
 
-    func testDropsAMacConversionCacheThatDidNotComeAlong() throws {
+    func testReadsTheOriginalWhenTheMacConversionCacheDidNotComeAlong() throws {
         let dir = try tempDir()
         defer { try? FileManager.default.removeItem(at: dir) }
         let media = dir.appendingPathComponent("a.mp4")
@@ -53,8 +53,10 @@ final class RoomFileTests: XCTestCase {
         let url = dir.appendingPathComponent("p.room")
         try RoomFile.save(p, to: url)
         let loaded = try RoomFile.load(url)
-        XCTAssertNil(loaded.assets[0].playablePath)
+        XCTAssertEqual(loaded.assets[0].source.path, media.path)
         XCTAssertEqual(RoomFile.missingMedia(loaded).count, 0)
+        try RoomFile.save(loaded, to: url)
+        XCTAssertEqual(try RoomFile.load(url).assets[0].playablePath, p.assets[0].playablePath)
     }
 
     func testEditingBeforeTheFootageArrivesKeepsItsLinks() throws {
