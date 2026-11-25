@@ -20,7 +20,8 @@ public enum EditroomCLI {
       export <project.room> <out.mp4> [--height N] [--encoder NAME] [--dry-run]
             Renders H.264/AAC MP4 with ffmpeg.
 
-    Times are seconds (12.5) or timecode (00:00:12:15). Tools: --ffmpeg/--ffprobe <path>,
+    Times are seconds (12.5), minutes:seconds as `info` shows them (0:12.50, 1:02:03.25),
+    or timecode with frames (00:00:12:15). Tools: --ffmpeg/--ffprobe <path>,
     EDITROOM_FFMPEG/EDITROOM_FFPROBE, beside this program, or on PATH.
     """
 
@@ -180,6 +181,10 @@ public enum EditroomCLI {
 
     static func time(_ s: String, fps: Double) throws -> Double {
         if let v = Double(s), v >= 0 { return v }
+        // [h:]m:ss[.cc], as `info` shows times; four fields (00:00:12:15) is timecode with frames.
+        if s.range(of: #"^\d+(:\d{1,2}){1,2}(\.\d+)?$"#, options: .regularExpression) != nil {
+            return s.split(separator: ":").reduce(0) { $0 * 60 + (Double($1) ?? 0) }
+        }
         if let v = Timecode.parse(s, fps: fps) { return v }
         throw Tools.Failure(description: "Can't read time \(s)")
     }

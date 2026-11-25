@@ -48,6 +48,9 @@ final class TimelineEditTests: XCTestCase {
     func testCLITimeAndTrackParsing() throws {
         let p = Project()
         XCTAssertEqual(try EditroomCLI.time("12.5", fps: 30), 12.5)
+        XCTAssertEqual(try EditroomCLI.time("0:00.50", fps: 30), 0.5, accuracy: 1e-9)
+        XCTAssertEqual(try EditroomCLI.time("1:02:03.25", fps: 30), 3723.25, accuracy: 1e-9)
+        XCTAssertEqual(try EditroomCLI.time("00:00:12:15", fps: 30), 12.5, accuracy: 1e-9)
         XCTAssertEqual(try EditroomCLI.track(named: "a2", in: p), p.audioTracks[1].id)
         XCTAssertThrowsError(try EditroomCLI.track(named: "V9", in: p))
         XCTAssertThrowsError(try EditroomCLI.Args(["split", "p.room", "--at", "1", "-O", "copy.room"]))

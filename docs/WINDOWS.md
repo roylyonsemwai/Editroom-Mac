@@ -64,7 +64,7 @@ $cli = ".\.build\debug\editroom-cli.exe"
 & $cli export "$HOME\Videos\Trip\trip.room" "$HOME\Videos\Trip\trip.mp4" --height 1080
 ```
 
-Times can be seconds (`12.5`) or timecode (`00:00:12:15`). Editing commands save over the project unless
+Times can be seconds (`12.5`), minutes:seconds as `info` prints them (`0:12.50`), or timecode with frames (`00:00:12:15`). Editing commands save over the project unless
 you pass `-o other.room`.
 
 To open a Mac project, copy its folder with the media. Files are found through their paths relative to
